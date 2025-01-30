@@ -1,10 +1,8 @@
 <?php
-// Output-Buffer aktivieren, um Header-Probleme zu vermeiden
 ob_start();
 session_start();
 
-// Verbindung zur MySQL-Datenbank
-$host = "db"; // MySQL-Container-Name aus docker-compose.yml
+$host = "db";
 $dbname = "user_database";
 $username = "user";
 $password = "userpassword";
@@ -16,32 +14,36 @@ try {
     die("Datenbankverbindung fehlgeschlagen: " . $e->getMessage());
 }
 
-// Überprüfung der Benutzerdaten
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $inputUsername = trim($_POST['username'] ?? '');
     $inputPassword = trim($_POST['password'] ?? '');
+
+    echo "Benutzername: $inputUsername <br>";
+    echo "Passwort: $inputPassword <br>";
 
     if (!empty($inputUsername) && !empty($inputPassword)) {
         $stmt = $pdo->prepare("SELECT password_hash FROM users WHERE username = :username");
         $stmt->execute(['username' => $inputUsername]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($inputPassword, $user['password_hash'])) {
-            // Login erfolgreich → Session setzen
-            $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $inputUsername;
-
-            // Weiterleitung zur Webserver-Hauptseite
-            header("Location: /Webserver-main/index.html");
-            exit;
+        if ($user) {
+            echo "Benutzer gefunden! Prüfe Passwort...<br>";
+            if (password_verify($inputPassword, $user['password_hash'])) {
+                echo "✅ Passwort korrekt. Weiterleitung...";
+                $_SESSION['loggedin'] = true;
+                $_SESSION['username'] = $inputUsername;
+                header("Location: /Webserver-main/index.html");
+                exit;
+            } else {
+                echo "❌ Passwort falsch!";
+            }
         } else {
-            echo "❌ Falscher Benutzername oder Passwort.";
+            echo "❌ Benutzer nicht gefunden!";
         }
     } else {
-        echo "❌ Bitte Benutzername und Passwort eingeben.";
+        echo "❌ Bitte alle Felder ausfüllen.";
     }
 }
 
-// Beendet den Output-Buffer, um Header-Probleme zu vermeiden
 ob_end_flush();
 ?>
