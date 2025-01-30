@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            background-image: url('images/background-welcome-page.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        header {
+            background-color: #FFD700;
+            padding: 100px 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            color: #2C2C2C;
+            font-size: 3.5em;
+        }
+        header p {
+            font-size: 1.8em;
+            margin-top: 10px;
+        }
+        main {
+            padding: 20px;
+        }
+        .box {
+            background-color: #242424;
+            color: #FFD700;
+            border-radius: 10px;
+            padding: 80px;
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        footer {
+            background-color: #000000;
+            color: white;
+            text-align: center;
+            padding: 1em 0;
+        }
+        #loginSection {
+            display: none;
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        form label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        form input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        form button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #FFD700;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #e6c300;
+        }
+        #showLoginButton {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #FFD700;
+            color: #2C2C2C;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        #showLoginButton:hover {
+            background-color: #e6c300;
+            transform: translateY(-2px);
+        }
+        #showLoginButton:active {
+            background-color: #d4b200;
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Willkommen auf Gamerdiver.de</h1>
+        <p>Das Portal für alles rund um unsere Gameserver oder sonstige Community-Themen</p>
+    </header>
+
+    <main>
+        <div class="box">
+            <h1>Willkommen auf unserer Website.</h1>
+            <p>Hier finden Sie alle Informationen, die für unsere Community relevant sind.</p>
+            <p>Dies ist unsere Willkommensseite. Relevante Informationen werden Sie hier noch nicht finden :)</p>
+        </div>
+        <div class="box">
+            <h1>Was Sie bei uns erwartet:</h1>
+            <p>- Minecraft</p>
+            <p>- Helldivers</p>
+            <p>- Memes</p>
+            <p>Und noch vieles mehr.</p>
+        </div>
+        <div class="box">
+            <h1>Für alle Infos unserer Community, melden Sie sich bitte an.</h1>
+            <button id="showLoginButton">Login</button>
+            <div id="loginSection">
+                <form method="POST" action="login.php">
+                   <label for="username">Benutzername:</label>
+                   <input type="text" id="username" name="username" required>
+                   <label for="password">Passwort:</label>
+                   <input type="password" id="password" name="password" required>
+                   <button type="submit">Anmelden</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Gamerdiver.de</p>
+        <p>Disclaimer: Diese Seite ist rein für Hobby-, Privat- oder Satire-Zwecke. Ähnlichkeiten zu bereits existierenden Websites, Personen oder Projekten sind rein zufällig.</p>
+    </footer>
+
+    <script>
+        // Event-Listener für den Login-Button
+        document.getElementById('showLoginButton').addEventListener('click', function() {
+            // Zeigt den Login-Bereich an
+            const loginSection = document.getElementById('loginSection');
+            loginSection.style.display = 'block';
+
+            // Versteckt den Login-Button
+            this.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
