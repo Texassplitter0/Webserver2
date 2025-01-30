@@ -29,7 +29,7 @@ if ($user && password_verify($inputPassword, $user['password_hash'])) {
     $_SESSION['username'] = $inputUsername;
 
     // Weiterleitung zum Webserver
-    header("Location: /Webserver-main/index.html");
+    header("Location: /Webserver-main/welcome.html");
     exit;
 } else {
     echo "Falscher Benutzername oder Passwort.";
