@@ -1,14 +1,12 @@
 <?php
-// 🚀 Fehler-Reporting aktivieren
+// 🚀 Fehler abfangen & Debugging aktivieren
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-
-// **Fix für Header-Probleme**
 ob_start();
 session_start();
 
-// Verbindung zur MySQL-Datenbank
-$host = "db"; // Name des MySQL-Containers in docker-compose.yml
+// 🚀 Verbindung zur MySQL-Datenbank
+$host = "db";  // WICHTIG: Name des MySQL-Containers aus docker-compose.yml
 $dbname = "user_database";
 $username = "user";
 $password = "userpassword";
@@ -20,36 +18,43 @@ try {
     die("❌ Datenbankverbindung fehlgeschlagen: " . $e->getMessage());
 }
 
-// **POST-Daten abfangen**
+// 🚀 Debugging: POST-Daten ausgeben
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $inputUsername = trim($_POST['username'] ?? '');
     $inputPassword = trim($_POST['password'] ?? '');
 
+    echo "📌 Debug: Benutzername: $inputUsername <br>";
+    echo "📌 Debug: Passwort: $inputPassword <br>";
+
     if (!empty($inputUsername) && !empty($inputPassword)) {
-        // Benutzer abrufen
         $stmt = $pdo->prepare("SELECT password_hash FROM users WHERE username = :username");
         $stmt->execute(['username' => $inputUsername]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
+            echo "✅ Benutzer gefunden: $inputUsername <br>";
+
             if (password_verify($inputPassword, $user['password_hash'])) {
+                echo "✅ Passwort korrekt. Setze Session... <br>";
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $inputUsername;
 
-                // **Weiterleitung zum 2. Webserver**
-                header("Location: http://mein-2-webserver.local");
+                // 🚀 Weiterleitung zur Hauptseite
+                echo "<script>window.location.href='/Webserver-main/index.html';</script>";
                 exit;
             } else {
-                echo "❌ Passwort falsch!";
+                echo "❌ Passwort falsch! <br>";
             }
         } else {
-            echo "❌ Benutzer nicht gefunden!";
+            echo "❌ Benutzer nicht gefunden! <br>";
         }
     } else {
-        echo "❌ Bitte Benutzername und Passwort eingeben.";
+        echo "❌ Bitte Benutzername und Passwort eingeben. <br>";
     }
+} else {
+    echo "⚠️ Ungültiger Zugriff auf login.php <br>";
 }
 
-// **Beende Output-Buffer, um Header-Probleme zu verhindern**
+// 🚀 Output-Buffer leeren
 ob_end_flush();
 ?>
