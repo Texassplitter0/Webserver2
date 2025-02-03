@@ -1,10 +1,14 @@
 <?php
-// 🚀 WICHTIG: Output-Buffer aktivieren, um unerwartete Ausgaben zu vermeiden
+// 🚀 Fehler-Reporting aktivieren
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// **Fix für Header-Probleme**
 ob_start();
 session_start();
 
-// Datenbankverbindung
-$host = "db"; // MySQL-Container aus docker-compose.yml
+// Verbindung zur MySQL-Datenbank
+$host = "db"; // Name des MySQL-Containers in docker-compose.yml
 $dbname = "user_database";
 $username = "user";
 $password = "userpassword";
@@ -16,47 +20,36 @@ try {
     die("❌ Datenbankverbindung fehlgeschlagen: " . $e->getMessage());
 }
 
-// 🚀 Debugging: Wurde das Formular gesendet?
+// **POST-Daten abfangen**
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $inputUsername = trim($_POST['username'] ?? '');
     $inputPassword = trim($_POST['password'] ?? '');
 
-    // 🚀 Debugging: Zeigt eingegebene Daten (nur für Fehleranalyse)
-    error_log("Login-Versuch: Benutzername: $inputUsername");
-    
     if (!empty($inputUsername) && !empty($inputPassword)) {
+        // Benutzer abrufen
         $stmt = $pdo->prepare("SELECT password_hash FROM users WHERE username = :username");
         $stmt->execute(['username' => $inputUsername]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            error_log("Benutzer gefunden: $inputUsername");
-
             if (password_verify($inputPassword, $user['password_hash'])) {
-                error_log("✅ Passwort korrekt für Benutzer: $inputUsername");
-                
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $inputUsername;
 
-                // 🚀 Umleitung zur Startseite des Webservers
-                header("Location: /Webserver-main/index.html");
+                // **Weiterleitung zum 2. Webserver**
+                header("Location: http://mein-2-webserver.local");
                 exit;
             } else {
-                error_log("❌ Falsches Passwort für Benutzer: $inputUsername");
                 echo "❌ Passwort falsch!";
             }
         } else {
-            error_log("❌ Benutzer nicht gefunden: $inputUsername");
             echo "❌ Benutzer nicht gefunden!";
         }
     } else {
         echo "❌ Bitte Benutzername und Passwort eingeben.";
     }
-} else {
-    error_log("⚠️ Ungültiger Aufruf von login.php");
-    echo "⚠️ Diese Seite darf nur per POST aufgerufen werden.";
 }
 
-// 🚀 Output-Buffer leeren, um Header-Probleme zu vermeiden
+// **Beende Output-Buffer, um Header-Probleme zu verhindern**
 ob_end_flush();
 ?>
