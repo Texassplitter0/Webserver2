@@ -1,24 +1,10 @@
-version: '3.8'
 services:
-  webserver-welcome:
+  webserver:
     build: .
     ports:
       - "10100:80"
-    volumes:
-      - ./Webserver-main:/var/www/html
     depends_on:
       - db
-      - webserver-internal
-    networks:
-      - webapp_network
-
-  webserver-internal:
-    image: php:8.1-apache
-    container_name: webserver_internal
-    volumes:
-      - ./Webserver-internal:/var/www/html
-    ports:
-      - "10200:80"
     networks:
       - webapp_network
 
