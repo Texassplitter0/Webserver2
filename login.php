@@ -1,13 +1,13 @@
 <?php
-// Start output buffering to prevent premature output
+// Start output buffering
 ob_start();
-session_start(); 
+session_start();
 
-// Enable error reporting
+// Enable error reporting for debugging
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Database connection setup
+// 🚀 Database connection
 $host = "db"; 
 $dbname = "user_database";
 $username = "user";
@@ -20,7 +20,7 @@ try {
     die("❌ Datenbankverbindung fehlgeschlagen: " . $e->getMessage());
 }
 
-// Process login only on POST request
+// 🚀 Login handling
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $inputUsername = trim($_POST['username'] ?? '');
     $inputPassword = trim($_POST['password'] ?? '');
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $inputUsername;
             
-            // Redirect properly using header() instead of echoing JavaScript
+            // Redirect using proper header
             header("Location: /Webserver-main/index.html");
             exit;
         } else {
@@ -47,5 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     echo "⚠️ Ungültiger Zugriff auf login.php";
 }
 
-ob_end_flush(); // Flush buffer at the very end
+// End output buffering
+ob_end_flush();
 ?>
